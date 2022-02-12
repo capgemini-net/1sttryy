@@ -1,0 +1,613 @@
+Mutilevel Inheritance
+
+namespace CG_APP1
+{
+    class A
+    {
+        protected  int x, y;
+        public void getxy()
+        {
+            Console.WriteLine("enter values for x & y");
+            x = int.Parse(Console.ReadLine());
+            y = int.Parse(Console.ReadLine());
+        }
+    }
+  
+    class B:A
+    {
+        protected int z;
+        public void getz()
+        {
+            Console.WriteLine("enter value for Z");
+            z = int.Parse(Console.ReadLine());
+        }
+    }
+    class C:B
+    {
+        public void calculate()
+        {
+            Console.WriteLine("Product=" + (x * y * z));
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            C obj = new C();
+            obj.getxy();
+            obj.getz();
+            obj.calculate();
+        }
+    }
+}
+
+static constructor:
+
+namespace CG_APP1
+{
+    class Demo:Object
+    {
+        public Demo()
+        {
+            Console.WriteLine("non-static constr");
+        }
+        static Demo()
+        {
+            Console.WriteLine("static constr");
+        }
+    }
+   
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Demo obj = new Demo();
+        }
+    }
+}
+
+
+namespace CG_APP1
+{
+    class Demo:Object
+    {
+        public Demo()
+        {
+            Console.WriteLine("A");
+        }
+        static Demo()
+        {
+            Console.WriteLine("B");
+        }
+    }
+    class Demo1 : Demo
+    {
+        public Demo1()
+        {
+            Console.WriteLine("C");
+        }
+        static Demo1()
+        {
+            Console.WriteLine("D");
+        }
+    }
+   
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Demo1 obj = new Demo1(); //D B A C
+        }
+    }
+}
+
+2types of method:
+1.abstract method
+methods without def/body
+2.concrete method/non-abstract method
+methods with def/body
+
+Interface
+->It is group of abstract methods
+->all methods of interface are public by default.
+->variable's are not allowed in interface.
+->All methods of interface should implemented in class.
+->Interface cannot be instantiated.
+
+namespace CG_APP1
+{
+    interface InterfaceOne
+    {
+       void method1(int a);
+       void method2(string s);
+    }
+
+    class Demo : InterfaceOne
+    {
+        public void method1(int a)
+        {
+            Console.WriteLine("suqare of no=" + (a * a));
+        }
+
+        public void method2(string s)
+        {
+            Console.WriteLine("Welcome=" + s);
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Demo obj = new Demo();
+            obj.method1(10);
+            obj.method2("Sam");
+        }
+    }
+}
+
+namespace CG_APP1
+{
+    interface InterfaceOne
+    {
+        void display();
+    }
+
+    interface InteraceTwo
+    {
+        void display();
+    }
+
+    class Demo : InterfaceOne, InteraceTwo
+    {
+      void InterfaceOne.display()
+        {
+            Console.WriteLine("method from interface one");
+        }
+       void InteraceTwo.display()
+        {
+            Console.WriteLine("method from interface two");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Demo obj = new Demo();
+            ((InterfaceOne)obj).display();
+            ((InteraceTwo)obj).display();
+        }
+    }
+}
+
+
+Polymorphism:
+
+poly->multiple
+
+morphism->forms/behaviour/functionality
+
+
+2 types
+1.compile-time->static,function overloading,early binding
+
+function overloading-> is achieved by writing a identical method with diffrence in the number of 
+parameter and return type.
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public  int methodone(int a)
+        {
+            return a*a;
+        }
+
+        public int methodone(int a,int b)
+        {
+            return a * b;
+        }
+
+        public double methodone(double a, double b,int c)
+        {
+            return a + b+c;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Demo obj = new Demo();
+            Console.WriteLine("Result1="+obj.methodone(10));
+            Console.WriteLine("Result2=" + obj.methodone(10, 20));
+            Console.WriteLine("Result3=" + obj.methodone(1.2, 3.4, 50));
+        }
+    }
+}
+
+
+2.runtime->dynamic,function overriding,late Binding
+
+namespace CG_APP1
+{
+    class Demo1
+    {
+        public virtual void display()
+        {
+            Console.WriteLine("method from Base class");
+        }
+    }
+
+    class Demo2:Demo1
+    {
+        public override void display()
+        {
+            Console.WriteLine("method from Derived class");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Demo2 obj = new Demo2();
+            obj.display();
+        }
+    }
+}
+
+
+"base" keyword
+
+namespace CG_APP1
+{
+    class student
+    {
+        public int regno;
+        public string name;
+
+        public student(int regno,string name)
+        {
+            this.regno = regno;
+            this.name = name;
+        }
+    }
+    class marks:student
+    {
+        int total;
+        double per;
+
+        public marks(int regno, string name,int total,double per) :base(regno,name)
+        {
+            this.total = total;
+            this.per = per;
+        }
+
+        public void print()
+        {
+            Console.WriteLine("regno of student=" + regno);
+            Console.WriteLine("Name of student=" + name);
+            Console.WriteLine("total and percentage marks=" + total+","+per);
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            marks obj = new marks(1, "scott", 560, 80.67);
+            obj.print();
+        }
+    }
+}
+
+
+Abstract class
+->Abstract class allows variables.
+->Abstract class contains Abstract and non-Abstract method
+->Abstract class cannot be instantiated,but can be inherited.
+
+namespace CG_APP1
+{
+    abstract class Example
+    {
+        protected int len, bh;
+
+        public void getdata()
+        {
+            Console.WriteLine("enter length and breadth");
+            len = int.Parse(Console.ReadLine());
+            bh= int.Parse(Console.ReadLine());
+        }
+
+        public abstract void area();
+    }
+
+    class Example1 : Example
+    {
+        public override void area()
+        {
+            Console.WriteLine("Area=" + (len*bh));
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Example1 obj = new Example1();
+            obj.getdata();
+            obj.area();
+        }
+    }
+}
+
+
+Sealed class
+->Sealed class allows variables.
+->Sealed class contains only non-Abstract method
+->Sealed class can be instantiated,but 
+namespace CG_APP1
+{
+    sealed class Example
+    {
+        protected int len, bh;
+
+        public void getdata()
+        {
+            Console.WriteLine("enter length and breadth");
+            len = int.Parse(Console.ReadLine());
+            bh= int.Parse(Console.ReadLine());
+        }
+
+        public void area()
+        {
+            Console.WriteLine("Area=" + (len * bh));
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Example obj = new Example();
+            obj.getdata();
+            obj.area();
+        }
+    }
+}
+
+
+Partial class
+Partial class is used to split the development task into smaller units across multiple developers.
+
+namespace CG_APP1
+{
+    partial class Example
+    {
+        protected int len, bh;
+    }
+
+    partial class Example
+    {
+        public void getdata()
+        {
+            Console.WriteLine("enter length and breadth");
+            len = int.Parse(Console.ReadLine());
+            bh = int.Parse(Console.ReadLine());
+        }
+    }
+
+    partial class Example
+    { 
+        public void area()
+        {
+            Console.WriteLine("Area=" + (len * bh));
+        }
+    }
+    
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Example obj = new Example();
+            obj.getdata();
+            obj.area();
+        }
+    }
+}
+
+
+static class
+
+->static class contains only static variables.
+->static class contains only static method.
+->static class contains only static constructor.
+->static class cannot be instantiated and inherited.
+
+namespace CG_APP1
+{
+    static class Example
+    {
+        public static  int a, b;
+
+        static Example()
+        {
+            Example.a = 10;
+            Example.b = 20;
+        }
+
+        public static void display()
+        {
+            Console.WriteLine(a + "," + b);
+        }
+    }
+    
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Example obj = new Example();
+            Example.display();
+        }
+    }
+}
+
+
+String functions
+Length()
+IndexOf()
+LastIndexOf()
+Remove()
+Replace()
+Split()
+Compare()
+Concat()
+
+static void Main(string[] args)
+        {
+            string str1 = "hello";
+            int n = str1.Length;
+
+            Console.WriteLine("length of string=" + n);
+
+
+            string str2 = "welcome to c# programming";
+
+            Console.WriteLine(str2.IndexOf('o'));
+            Console.WriteLine(str2.LastIndexOf('o'));
+        }
+
+
+static void Main(string[] args)
+        {
+            string str1 = "hello";
+
+            string str2 = str1.Remove(4);
+
+            Console.WriteLine(str2);
+
+            string str3 = str1.Replace('h', 'H');
+
+            string data1 = "welcome to c# pro";
+
+            string data2 = data1.Replace("c#", "vb.net");
+
+            Console.WriteLine(str3+" , "+data2);
+        }
+
+static void Main(string[] args)
+        {
+            string str1 = "This is string functions in c#";
+
+            string[] str2 = str1.Split(' ');
+
+            foreach(string i in str2)
+            {
+                Console.WriteLine(i);
+            }
+
+            string x = "hi";
+            string y = "hai";
+            string z = "hey";
+            if(string.Compare(x, y)==0)
+            Console.WriteLine("same");
+            else
+            Console.WriteLine("not same");
+
+            Console.WriteLine(string.Concat(x, y,z));
+
+        }
+
+static void Main(string[] args)
+        {
+            string str1 = "This is string";
+
+            char[] ch = str1.ToCharArray();
+
+            foreach(char i in ch)
+            {
+                Console.WriteLine(i);
+            }
+
+            string str2 =(string)str1.Clone();
+            Console.WriteLine(str2);
+
+            char[] ch1 = new char[25];
+            str1.CopyTo(0, ch1, 0, 4);
+
+            Console.WriteLine(ch1);
+
+            Console.WriteLine(str1.StartsWith('X'));
+            Console.WriteLine(str1.EndsWith('g'));
+        }
+
+
+static void Main(string[] args)
+        {
+            string str1 = "This is string";
+           
+            Console.WriteLine(str1.Contains("is"));
+
+
+            string str2 = str1.Insert(7, ":");
+            Console.WriteLine(str2);
+
+
+            string[] str3 = new string[] {"this","is","string","handling" };
+
+            string str4 = string.Join(':', str3);
+            Console.WriteLine(str4);
+
+            CharEnumerator ch = str1.GetEnumerator();
+
+            while(ch.MoveNext())
+            {
+                Console.WriteLine(ch.Current);
+            }
+        }
+
+           string str1 = "This is string";
+
+            Console.WriteLine(str1.Substring(8, 6));
+
+
+
+==   
+->operator
+->check the reference identity.
+
+
+equals
+->function
+->check the content 
+
+
+
+ static void Main(string[] args)
+        {
+            string str1 = "This is string";
+
+            Console.WriteLine(str1.Substring(8, 6));
+
+            string s1 = "HELLO";
+            string s2 = "hELLO";
+            Console.WriteLine(s1.Equals(s2));
+            Console.WriteLine(s1==s2);
+
+            Console.WriteLine("--------------------");
+
+            object data1 = "CSHARP";
+            char[] chardata = {'C','S','H','A','R','P' };
+            object data2 = new string(chardata);
+
+            Console.WriteLine(data1.Equals(data2));
+            Console.WriteLine(data1 == data2); 
+
+            char[] newarray = str1.ToCharArray();
+            Array.Reverse(newarray);
+            Console.WriteLine(newarray);
+        }
+
+StringBuilder
+
+
