@@ -1,0 +1,788 @@
+Serialization:
+
+It is a method of converting an object into byte-stream,so that it can be saved Memory,file,DB.
+or
+Serialization is a method to persist the state of an object in order to have an ability to recreate
+the same object when required.
+
+3 types
+1.Binary
+2.soap
+
+3.XML
+
+binary and soap is reffered as deep serialisation
+
+XML is reffred as shallow serialisation(it will serialise only public member of class)
+
+
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+
+namespace CG_APP1
+{
+    [Serializable]
+    class student
+    {
+      public int rollno;
+      public  string name;
+      public  double per;
+
+        public student(int rollno,string name,double per)
+        {
+            this.rollno = rollno;
+            this.name = name;
+            this.per = per;
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            //student obj = new student(1,"john",75.88);
+            //FileStream fs = new FileStream("D:\\Fileone.txt", FileMode.Create);
+            //BinaryFormatter fm = new BinaryFormatter();
+            //fm.Serialize(fs, obj);
+            //fs.Close();
+
+            BinaryFormatter fm = new BinaryFormatter();
+            FileStream fs = new FileStream("D:\\Fileone.txt", FileMode.Open);
+            student obj = (student)fm.Deserialize(fs);
+            Console.WriteLine(obj.rollno + "," + obj.name + "," + obj.per);
+        }
+    }
+}
+
+
+
+DataContractJsonSerialisation
+
+JSON->
+javascript object notation.
+->json is considered as "text based standard" for data interchange/representation.
+
+{"rollno":"1","name":"john","per":"70.77"}
+
+
+namespace CG_APP1
+{
+    [DataContract]
+    class student
+    {
+      [DataMember]
+      public int rollno;
+        [DataMember]
+        public  string name;
+        [DataMember]
+        public  double per;
+
+        public student(int rollno,string name,double per)
+        {
+            this.rollno = rollno;
+            this.name = name;
+            this.per = per;
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+        //    student obj = new student(1, "john", 75.88);
+        //    FileStream fs = new FileStream("D:\\Filetwo.txt", FileMode.Create);
+        //    DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(student));
+        //    js.WriteObject(fs, obj);
+        //    fs.Close();
+
+        DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(student));
+        FileStream fs = new FileStream("D:\\Filetwo.txt", FileMode.Open);
+        student obj = (student)js.ReadObject(fs);
+        Console.WriteLine(obj.rollno + "," + obj.name + "," + obj.per);
+        }
+    }
+}
+
+
+XML-Serialisation
+
+Extensible markup language
+
+      public int rollno;
+      public  string name;
+      public  double per;
+
+<student>
+<rollno>1</rollno>
+<name>scott</name>
+<per>60.00</per>
+</student>
+<student>
+<rollno>2</rollno>
+<name>mary</name>
+<per>62.00</per>
+</student>
+
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
+
+namespace CG_APP1
+{
+    [Serializable]
+     public class student
+    {
+        public int rollno;
+        public  string name;
+        public  double per;
+
+        public student()
+        {
+            this.rollno = 1;
+            this.name = "john";
+            this.per =90.55;
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            //student obj = new student();
+            //FileStream fs = new FileStream("D:\\data1.xml", FileMode.Create);
+            //XmlSerializer xs = new XmlSerializer(typeof(student));
+            //xs.Serialize(fs, obj);
+            //fs.Close();
+
+
+            FileStream fs = new FileStream("D:\\data1.xml", FileMode.Open);
+            XmlSerializer xs = new XmlSerializer(typeof(student));
+            student obj= (student)xs.Deserialize(fs);
+            Console.WriteLine(obj.rollno + "," + obj.name + "," + obj.per);
+        }
+    }
+}
+
+Soap serialisation
+
+SOAP->simple object access protocol.
+
+<soap-envelope>
+<soap body>
+<student>
+<rollno>2</rollno>
+<name>mary</name>
+<per>62.00</per>
+</student>
+</soap body>
+</soap-envelope>
+
+
+Thread and MultiThreading
+
+"a block of code" that gets executed on request by user.
+
+using System.Threading;
+
+Thread->class
+ThreadStart ->Delegate
+Sleep()
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public static void Method1()
+        {
+            Console.WriteLine("executed by thread");
+            Thread.Sleep(100);
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Thread th1 = new Thread(new ThreadStart(Demo.Method1));
+            th1.Start();
+
+            Thread th2 = new Thread(new ThreadStart(Demo.Method1));
+            th2.Start();
+        }
+    }
+}
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public static void Method1()
+        {
+            for(int i=1;i<=10;i++)
+            {
+                Console.WriteLine(i);
+                Thread.Sleep(1000);
+            }
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Thread th1 = new Thread(new ThreadStart(Demo.Method1));
+            th1.Start();
+
+            Thread th2 = new Thread(new ThreadStart(Demo.Method1));
+            th2.Start();
+
+            Thread th3 = new Thread(new ThreadStart(Demo.Method1));
+            th3.Start();
+        }
+    }
+}
+
+Thread synchronization.
+
+synchronization is a technique,that allows only thread to access the resource for a particular time.
+no other thread will be allowed to interrupt,until the assigned job done by thread.
+Thread synchronization is achieved by using "lock".
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public void Method1() //withdraw
+        {
+            lock(this)
+            {
+                for (int i = 1; i <= 10; i++)
+                {
+                    Console.WriteLine(i);
+                    Thread.Sleep(1000);
+                }
+            }
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Demo obj = new Demo();
+            Thread th1 = new Thread(new ThreadStart(obj.Method1));
+            th1.Start();
+
+            Thread th2 = new Thread(new ThreadStart(obj.Method1));
+            th2.Start();
+
+            Thread th3 = new Thread(new ThreadStart(obj.Method1));
+            th3.Start();
+        }
+    }
+}
+
+
+Thread Pool: 
+It is collection of "pre-configured threads" which are alive to handle the incoming requests.
+Thread Pool is class which is available under "using System.Threading;" namespace.
+Thread Pool improves the performance of application.
+when an assigned task is completed by thread,returns the thread back to "TP".
+thread will not be destroyed,so that the same thread will be ready handle the other request/task/job.
+
+ThreadPool.
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public static void Method1(object obj) 
+        {
+            string threadname = "thread no=" + obj;
+                for (int i = 1; i <= 10; i++)
+                {
+                    Console.WriteLine(threadname+"is running"+ i);
+                   // Thread.Sleep(1000);
+                }
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Demo obj = new Demo();
+            for(int i=0;i<5;i++)
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(Demo.Method1), i);
+            }
+            Console.ReadLine();
+        }
+    }
+}
+
+Task:
+Task Library:
+using System.Threading.Tasks;
+
+synchronous programming
+
+namespace CG_APP1
+{
+    class Demo
+    {
+       public static void display()
+        {
+            Console.WriteLine("hello");
+            Thread.Sleep(4000);
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Demo.display();
+
+            int x, y;
+            x = 10;
+            y = 30;
+            int z = x + y;
+            Console.WriteLine(z);
+          //  Console.ReadLine();
+        }
+    }
+}
+
+threading->about the parallel execution of code.
+
+Asynchronous programming is implemented using task lib(Task class).
+Asynchronous programming provides "non-blocking execution".
+
+namespace CG_APP1
+{
+    //Asynchronous programming using Task Lib
+    class Demo
+    {
+       public static void display()
+        {
+            Console.WriteLine("hello");
+            Thread.Sleep(4000);
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("begin execution");
+
+            Task t1 = new Task(Demo.display);
+            t1.Start();
+
+            Console.WriteLine("end execution");
+
+          //  Console.ReadLine();
+        }
+    }
+}
+
+
+namespace CG_APP1
+{
+    //Asynchronous programming using Task Lib
+    class Demo
+    {
+       public static void display()
+        {
+            Console.WriteLine("hello");
+            Thread.Sleep(4000);
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("begin execution");
+
+            //Task t1 = new Task(Demo.display);
+            //t1.Start();
+
+            //or different ways of calling methods using run method of Task class.
+
+            //Task t1 = Task.Run(() => { Demo.display(); }); //lamda Expression
+
+            //or
+            Task t1 = Task.Run(new Action(Demo.display)); //Action delegate
+
+            Console.WriteLine("end execution");
+
+            Console.ReadLine();
+        }
+    }
+}
+
+
+namespace CG_APP1
+{
+    //Task class invoking method with return type and parameter.
+    class Demo
+    {
+        public static double display(int n)
+        {
+            int sum = 0;
+            for(int i=0;i<n;i++)
+            {
+                sum = sum + i;
+            }
+            return sum;
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("begin execution");
+
+            Task<double> t1 = Task.Run(() => { return Demo.display(5); }); //lamda Expression
+
+            Console.WriteLine("Output=" + t1.Result);
+
+            Console.WriteLine("end execution");
+
+            Console.ReadLine();
+        }
+    }
+}
+
+
+Async and await for Asynchronous programming
+
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public static void display1()
+        {
+            Console.WriteLine("Long Process started");
+            Thread.Sleep(4000);
+            Console.WriteLine("Long Process completed");
+        }
+        public static void display2()
+        {
+            Console.WriteLine("short Process started");
+            Console.WriteLine("short Process completed");
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("begin execution");
+
+            Demo.display1();
+            Demo.display2();
+
+            Console.WriteLine("end execution");
+
+            Console.ReadLine();
+        }
+    }
+}
+
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public async static void display1()
+        {
+            Console.WriteLine("Long Process started");
+            await Task.Delay(1000);
+            Console.WriteLine("Long Process completed");
+        }
+
+        public static void display2()
+        {
+            Console.WriteLine("short Process started");
+            Console.WriteLine("short Process completed");
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("begin execution");
+
+            Demo.display1();
+            Demo.display2();
+
+            Console.WriteLine("end execution");
+
+            Console.ReadLine();
+        }
+    }
+}
+
+Regular Expression:
+
+It is pattern that could be matched against an input text.
+
+using System.Text.RegularExpressions;
+
+
+Regex rg=new Regex();
+
+matches(),
+Matchcollection
+IMatch(),
+Replace()
+
+class Program
+    {
+        public static void Main(string[] args)
+        {
+            string pat1 = @"\b[A]\w+";
+            Regex rg = new Regex(pat1);
+            string names = "Anu,Ajay,Vijay,Sujay,Anjan";
+            MatchCollection col = rg.Matches(names);
+
+            for(int i=0;i<col.Count;i++)
+            {
+                Console.WriteLine(col[i].Value);
+            }
+        }
+    }
+
+@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+
+
+anush@gmail.com
+
+ public static void Main(string[] args)
+        {
+            string pat1 = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+            string mailid = "anush.gmail@com";
+
+            bool res = Regex.IsMatch(mailid, pat1);
+
+            if(res==true)
+            Console.WriteLine("success");
+            else
+            Console.WriteLine("Invalid");
+
+        }
+
+String Interpolation:
+It is method of concatenating,formatting and manipulating strings.
+
+class Program
+    {
+        public static void Main(string[] args)
+        {
+            string bname = "C# COMPLETE REF";
+
+            string newstring = $"I refer {bname},It is a very good Book with all examples.";
+
+            Console.WriteLine(newstring);
+
+            //Console.WriteLine("I refer {0},It is a very good Book with all examples.", bname);
+
+            string empfname = "john";
+            string emplname = "mary";
+            string mailid = $"{empfname}.{emplname}@yahoo.co.in";
+
+            Console.WriteLine(mailid);
+
+            string empname = "Anjan";
+            string desig = "TL";
+            string dept = "TESTING";
+
+            string empinfo = $"{empname}\n is working as \n {desig}\n in {dept} \n Department";
+
+            Console.WriteLine(empinfo);
+        }
+    }
+}
+
+Exception Filters:
+allows to specify a condition along with catch block using "when keyword".
+
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public static void sometask()
+        {
+            Console.WriteLine("new task begins");
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                int[] a = new int[5];
+                a[8] = 30;
+               // int a = 100, b = 0;
+               // int c = a / b;
+            }
+            catch(Exception ex) when(ex.GetType().ToString()== "System.IndexOutOfRangeException")
+            {
+                Demo.sometask();
+            }
+        }
+    }
+}
+
+namespace CG_APP1
+{
+    class Demo
+    {
+        public static void sometask()
+        {
+            Console.WriteLine("new task begins");
+        }
+    }
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                throw new IndexOutOfRangeException("err occurred");
+            }
+            catch(Exception ex) when(ex.Message == "err occurred")
+            {
+                Console.WriteLine(ex.Message);
+                Demo.sometask();
+            }
+        }
+    }
+}
+
+
+Dependency Injection:
+
+Tight coupling/no interface
+
+
+Tight coupling
+namespace CG_APP1
+{
+    class Demo
+    {
+        public  void sometask1()
+        {
+            Console.WriteLine("task1");
+        }
+
+        public void sometask2()
+        {
+            Console.WriteLine("task2");
+        }
+
+        public void sometask3()
+        {
+            Console.WriteLine("task3");
+        }
+
+        public void sometask4()
+        {
+            Console.WriteLine("task4");
+        }
+    }
+
+    class DependencyInj //client
+    {
+        Demo obj = new Demo();
+        public void allTasks()
+        {
+            obj.sometask1();
+            obj.sometask2();
+            obj.sometask3();
+            obj.sometask4();
+        }
+    }
+
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            DependencyInj d1 = new DependencyInj();
+            d1.allTasks();
+        }
+    }
+}
+
+Loose coupled code/interface/Dependency Injection
+highly maintainable
+
+
+namespace CG_APP1
+{
+    interface Interface1
+    {
+        void compute();
+    }
+    class Demo1:Interface1
+    {
+        public void compute()
+        {
+            Console.WriteLine("task1");
+        }
+    }
+    class Demo2: Interface1
+    { 
+        public void compute()
+        {
+            Console.WriteLine("task2");
+        }
+    }
+
+    class Demo3 : Interface1
+    {
+        public void compute()
+        {
+            Console.WriteLine("diff task1");
+        }
+    }
+
+    class Demo4 : Interface1
+    {
+        public void compute()
+        {
+            Console.WriteLine("diff task10");
+        }
+    }
+
+    class DependencyInj //client
+    {
+        Interface1 objint = null;
+        public DependencyInj(Interface1 obj)//dependency inj
+        {
+            objint = obj;
+        }
+        public void allTasks()
+        {
+            objint.compute();
+        }
+    }
+
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            DependencyInj d1 = new DependencyInj(new Demo1());
+            d1.allTasks();
+
+            DependencyInj d2 = new DependencyInj(new Demo2());
+            d2.allTasks();
+
+            DependencyInj d3 = new DependencyInj(new Demo3());
+            d3.allTasks();
+
+            DependencyInj d4 = new DependencyInj(new Demo4());
+            d4.allTasks();
+        }
+    }
+}
+
+
+
+
+
+
